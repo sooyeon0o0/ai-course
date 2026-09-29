@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>결제 실패</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        table { width: 100%; max-width: 600px; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        h1 { color: #ff0000; }
+    </style>
+</head>
+<body>
+    <h1>❌ 결제 실패</h1>
+    <p>결제 실패 결과 상세 정보:</p>
+    <table id="result-table">
+        <thead>
+            <tr>
+                <th>항목</th>
+                <th value>값</th>
+            </tr>
+        </thead>
+        <tbody id="result-tbody"></tbody>
+    </table>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const tbody = document.getElementById('result-tbody');
+
+        // Fail URL parameter keys typically include 'code' and 'message'
+        const params = {
+            'code': urlParams.get('code'),
+            'message': urlParams.get('message')
+        };
+
+        for (const [key, value] of Object.entries(params)) {
+            if (value) {
+                const row = tbody.insertRow();
+                const cell1 = row.insertCell(0);
+                const cell2 = row.insertCell(1);
+                cell1.textContent = key;
+                cell2.textContent = value;
+            }
+        }
+
+        if (tbody.rows.length === 0) {
+            const row = tbody.insertRow();
+            row.insertCell(0).textContent = "데이터가 없습니다.";
+            row.insertCell(1).textContent = "-";
+        }
+    </script>
+</body>
+</html>
