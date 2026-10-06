@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Todo List</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>할 일 관리</h1>
+        
+        <!-- 할 일 추가 폼 -->
+        <form action="/add" method="POST" class="add-form">
+            <input type="text" name="title" placeholder="새로운 할 일을 입력하세요..." required>
+            <button type="submit">추가</button>
+        </form>
+
+        <!-- 할 일 목록 -->
+        <ul class="todo-list">
+            {% for todo in todos %}
+                <li class="todo-item {{ 'completed' if todo.is_completed else '' }}">
+                    <div class="todo-content">
+                        <span class="todo-title">{{ todo.title }}</span>
+                        <span class="todo-date">{{ todo.created_at }}</span>
+                    </div>
+                    <div class="todo-actions">
+                        <!-- 완료/해제 버튼 -->
+                        <form action="/toggle/{{ todo.id }}" method="POST" style="display: inline;">
+                            <button type="submit" class="btn-toggle">
+                                {{ '취소' if todo.is_completed else '완료' }}
+                            </button>
+                        </form>
+                        <!-- 삭제 버튼 -->
+                        <form action="/delete/{{ todo.id }}" method="POST" style="display: inline;">
+                            <button type="submit" class="btn-delete">삭제</button>
+                        </form>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        
+        {% if not todos %}
+            <p class="empty-msg">할 일이 없습니다. 새로운 할 일을 추가해보세요!</p>
+        {% endif %}
+    </div>
+</body>
+</html>
