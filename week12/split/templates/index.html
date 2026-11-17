@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>나눠 내기 계산기</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 18px;
+            box-sizing: border-box;
+            -webkit-appearance: none;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:active {
+            background-color: #0056b3;
+        }
+        .result-area {
+            margin-top: 30px;
+            text-align: center;
+            padding: 20px;
+            background-color: #e7f3ff;
+            border-radius: 15px;
+        }
+        .result-text {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        .result-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .error {
+            color: #dc3545;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        .items-list {
+            margin-top: 20px;
+            text-align: left;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+        .items-list table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .items-list td {
+            padding: 5px 0;
+        }
+        .items-list tr:last-child td {
+            border-top: 1px solid #ddd;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💸 나눠 내기</h1>
+        <form method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="receipt_image">영수증 사진 업로드</label>
+                <input type="file" name="receipt_image" id="receipt_image" accept="image/*">
+            </div>
+            <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+            <div class="form-group">
+                <label for="amount">총 금액 (원) - 직접 입력 시</label>
+                <input type="number" name="amount" id="amount" step="any" placeholder="예: 50000" value="{{ amount if amount != '' else '' }}">
+            </div>
+            <div class="form-group">
+                <label for="people">인원 수 (명)</label>
+                <input type="number" name="people" id="people" step="1" placeholder="예: 4" value="{{ people if people != '' else '' }}" required>
+            </div>
+            <button type="submit">계산하기</button>
+        </form>
+
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+
+        {% if items %}
+            <div class="items-list">
+                <table>
+                    {% for item in items %}
+                    <tr>
+                        <td>{{ item.item }}</td>
+                        <td style="text-align: right;">{{ "{:,.0f}".format(item.price) }}원</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        {% endif %}
+
+        {% if result is not none %}
+            <div class="result-area">
+                <div class="result-text">1인당 내야 할 금액</div>
+                <div class="result-value">{{ "{:,.0f}".format(result) }}원</div>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
